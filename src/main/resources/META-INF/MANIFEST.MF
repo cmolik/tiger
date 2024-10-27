@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: tiger.example.Example
+Add-Exports: java.base/java.lang java.desktop/sun.awt java.desktop/sun.java2d
+
