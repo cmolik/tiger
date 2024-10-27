@@ -15,6 +15,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>repsy</id>
+            <name>My Public Maven Repository on Repsy</name>
+            <url>https://repo.repsy.io/mvn/cmolik/public</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>repsy</id>
+            <name>My Public Maven Repository on Repsy</name>
+            <url>https://repo.repsy.io/mvn/cmolik/public</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>javax.vecmath</groupId>
@@ -46,30 +62,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <!--version>3.8.1</version-->
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <!--version>3.8.1</version-->
-                    <executions>
-                        <execution>
-                            <id>install-swt</id>
-                            <phase>clean</phase>
-                            <configuration>
-                                <repository>default</repository>
-                                <groupId>org.eclipse</groupId>
-                                <artifactId>swt</artifactId>
-                                <version>4.952</version>
-                                <file>lib/swt.jar</file>
-                                <packaging>jar</packaging>
-                                <generatePom>true</generatePom>
-                            </configuration>
-                            <goals>
-                                <goal>install-file</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
