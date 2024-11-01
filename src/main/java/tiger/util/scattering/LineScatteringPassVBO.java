@@ -15,27 +15,27 @@ import tiger.core.Pass;
  *
  * @author cmolikl
  */
-public class ScatteringPass extends Pass {
+public class LineScatteringPassVBO extends Pass {
     
     protected int width;
     protected int height;
     
-    private int VBOVertices;
-    private FloatBuffer vertices;
+    private int vbo;
+    private FloatBuffer lines;
     
-    public ScatteringPass(URL vertexShader, URL fragmentShader, int width, int height) {
+    public LineScatteringPassVBO(URL vertexShader, URL fragmentShader, int width, int height) {
         super(vertexShader, fragmentShader);
         this.width = width;
         this.height = height;
     }
 
-    public ScatteringPass(InputStream vertexShader, InputStream fragmentShader, int width, int height) {
+    public LineScatteringPassVBO(InputStream vertexShader, InputStream fragmentShader, int width, int height) {
         super(vertexShader, fragmentShader);
         this.width = width;
         this.height = height;
     }
 
-     public ScatteringPass(InputStream vertexShader, InputStream fragmentShader, InputStream geometryShader, int inputType, int outputType, int width, int height) {
+     public LineScatteringPassVBO(InputStream vertexShader, InputStream fragmentShader, InputStream geometryShader, int inputType, int outputType, int width, int height) {
         super(vertexShader, fragmentShader, geometryShader, inputType, outputType);
         this.width = width;
         this.height = height;
@@ -47,7 +47,7 @@ public class ScatteringPass extends Pass {
         int[] vp = new int[4];                  // Where The Viewport Values Will Be Stored
         gl.glGetIntegerv(GL.GL_VIEWPORT, vp, 0);
         gl.glViewport(0, 0, width, height);
-        renderPoints(gl);
+        renderLines(gl);
         gl.glViewport(vp[0], vp[1], vp[2], vp[3]);
     }
     
@@ -58,7 +58,7 @@ public class ScatteringPass extends Pass {
         int[] temp = new int[1];
         gl.glGenBuffers(1, temp, 0);
         
-        VBOVertices = temp[0];
+        vbo = temp[0];
         
         super.init(drawable);
     }
@@ -66,44 +66,60 @@ public class ScatteringPass extends Pass {
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL2 gl = drawable.getGL().getGL2();
-        InitPointVBO(gl, width, height);
+        initLineVBO(gl, width, height);
         super.reshape(drawable, x, y, width, height);
     }
     
-    public void InitPointVBO(GL2 gl, int width, int height) {
+    public void initLineVBO(GL2 gl, int width, int height) {
         
         float offsetX = 1.0f/width;
         float offsetY = 1.0f/height;
         float ox = 0.5f*offsetX;
         float oy = 0.5f*offsetY;
         
-        int numPoints = width*height;
-        vertices = ByteBuffer.allocateDirect(numPoints*3*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        int numLines = width*height;
+        // On the next line, the multiplicatior 10 is calculated as 2 vertices per line (each 3 floats) and 2 texture coordinates per line (each 2 floats) 
+        lines = ByteBuffer.allocateDirect(numLines*10*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
         for(float x = ox; x < 1f; x += offsetX) {
             for(float y = oy; y < 1f; y += offsetY) {
-                vertices.put(x);
-                vertices.put(y);
-                vertices.put(0.0f);
+                //First vertex
+                lines.put(0f);
+                lines.put(0.5f);
+                lines.put(0f);
+
+                //Texture coordinates of the first vertex
+                lines.put(x);
+                lines.put(y);
+
+                //Second vertex
+                lines.put(1f);
+                lines.put(0.5f);
+                lines.put(0f);
+
+                //Texture coordinates of the second vertex
+                lines.put(x);
+                lines.put(y);
             }
         }
         
-        vertices.rewind();
+        lines.rewind();
         
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, VBOVertices);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, vertices.capacity() * Buffers.SIZEOF_FLOAT,
-                            vertices, GL.GL_STATIC_DRAW);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, lines.capacity() * Buffers.SIZEOF_FLOAT,
+                            lines, GL.GL_STATIC_DRAW);
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
     } 
     
-    private void renderPoints(GL2 gl) {
+    private void renderLines(GL2 gl) {
         gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
         
-        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, VBOVertices);
-        gl.glVertexPointer(3, GL.GL_FLOAT, 0, 0);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo);
+        gl.glVertexPointer(3, GL.GL_FLOAT, 2, 0);
+        gl.glTexCoordPointer(2, GL.GL_FLOAT, 3, 3);
         
-        gl.glDrawArrays(GL2.GL_POINTS, 0, vertices.capacity()/3);
+        gl.glDrawArrays(GL2.GL_LINES, 0, lines.capacity()/10);
         
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
     }

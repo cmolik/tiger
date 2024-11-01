@@ -6,7 +6,6 @@
 package tiger.util.scattering;
 
 import java.io.InputStream;
-import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import static com.jogamp.opengl.GL.*;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -44,6 +43,7 @@ public class LineScatteringPass extends Pass {
 
     @Override
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        System.out.println("Line scattering reshape to " + width + " x " + height);
         GL2 gl = drawable.getGL().getGL2();
 
         offsetX = 1.0f / width;
@@ -66,6 +66,7 @@ public class LineScatteringPass extends Pass {
             for(float x = ox; x < 1f; x += offsetX) {
                 gl.glMultiTexCoord2f(0, x, y);
                 gl.glVertex3f(0f, 0.5f, 0f);
+                gl.glMultiTexCoord2f(0, x, y);
                 gl.glVertex3f(1f, 0.5f, 0f);
             }
         }

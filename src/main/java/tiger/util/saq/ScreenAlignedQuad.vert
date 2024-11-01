@@ -1,7 +1,7 @@
-#version 120
+#version 330 compatibility
 #extension GL_EXT_gpu_shader4: enable
 
-varying vec2 texCoord;
+out vec2 texCoord;
 
 void main(void) {
    gl_Position = vec4(gl_Vertex.xy, 0.0, 1.0 );

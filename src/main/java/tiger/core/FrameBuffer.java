@@ -150,6 +150,11 @@ public class FrameBuffer implements Link<FrameBuffer> {
         }
     }
 
+    public void changeDimensions(int width, int height){
+        this.width=width;//PAVLOVEC edit
+        this.height=height;//PAVLOVEC edit
+    }
+
     public BufferedImage getData(Texture target) {
         GL2 gl = GLU.getCurrentGL().getGL2();
         int index = targets.indexOf(target);

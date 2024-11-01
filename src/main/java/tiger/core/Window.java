@@ -93,6 +93,7 @@ public class Window {
     public boolean printFps = false;
     public boolean debug = false;
     public boolean interaction = true;
+    public boolean addRecordingMenu = false;
 
     boolean loadCameraParameters;
     CameraParameters savedCameraParameters;
@@ -354,10 +355,12 @@ public class Window {
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         menuBar = new JMenuBar();
         
+        if(addRecordingMenu) { 
         JMenu recordingMenu = new JMenu("Recording");
         menuBar.add(recordingMenu);
         BooleanMenuItem screenShotMenuItem = new BooleanMenuItem("Make screenshot", captureScreenShot);
         recordingMenu.add(screenShotMenuItem);
+        }
         
         LayoutManager layout = new BoxLayout(params, BoxLayout.Y_AXIS);
         params.setLayout(layout);
