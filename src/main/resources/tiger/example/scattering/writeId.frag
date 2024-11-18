@@ -3,10 +3,18 @@
 
 uniform uint ids;
 
+in vec2 texCoord;
+
 layout(location=0) out uvec4 fragColor;
 
 void main() {
-    fragColor = uvec4(9u, 0u, 0u, 0u);
+    if(texCoord.x < 0.5) discard;
+    if(texCoord.x > 0.6) discard;
+
+    if(texCoord.y < 0.9) discard;
+    if(texCoord.y > 1.0) discard;
+
+    fragColor = uvec4(ids, 0u, 0u, 0u);
 }
 
 

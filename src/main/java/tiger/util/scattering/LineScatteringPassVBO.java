@@ -80,20 +80,18 @@ public class LineScatteringPassVBO extends Pass {
         float oy = 0.5f*offsetY;
         
         numLines = width*height;
-        // On the next line, the multiplicatior 10 is calculated as 2 vertices per line (each 3 floats) and 2 texture coordinates per line (each 2 floats) 
-        lines = ByteBuffer.allocateDirect(numLines*10*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        // On the next line, the multiplicatior 8 is calculated as 2 vertices per line (each 2 floats) and 2 texture coordinates per line (each 2 floats) 
+        lines = ByteBuffer.allocateDirect(numLines*8*Buffers.SIZEOF_FLOAT).order(ByteOrder.nativeOrder()).asFloatBuffer();
 
         //Vertex positions
         for(float x = ox; x < 1f; x += offsetX) {
             for(float y = oy; y < 1f; y += offsetY) {
                 //First vertex
-                lines.put(0f);
-                lines.put(0.5f);
+                lines.put(-1f);
                 lines.put(0f);
 
                 //Second vertex
                 lines.put(1f);
-                lines.put(0.5f);
                 lines.put(0f);
             }
         }
@@ -126,8 +124,8 @@ public class LineScatteringPassVBO extends Pass {
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo);
         gl.glEnableVertexAttribArray(0);
         gl.glEnableVertexAttribArray(1);
-        gl.glVertexAttribPointer(0, 3, GL.GL_FLOAT, false, 3*Buffers.SIZEOF_FLOAT, 0L);
-        gl.glVertexAttribPointer(1, 2, GL.GL_FLOAT, false, 2*Buffers.SIZEOF_FLOAT, numLines*3*Buffers.SIZEOF_FLOAT);
+        gl.glVertexAttribPointer(0, 2, GL.GL_FLOAT, false, 2*Buffers.SIZEOF_FLOAT, 0L);
+        gl.glVertexAttribPointer(1, 2, GL.GL_FLOAT, false, 2*Buffers.SIZEOF_FLOAT, 4*numLines*Buffers.SIZEOF_FLOAT);
         
         //Each line is composed from 2 vertices, that is why 2*numLines
         gl.glDrawArrays(GL2.GL_LINES, 0, 2*numLines);
