@@ -286,7 +286,7 @@ public class Pass implements GLEventListener {
         if(initialized) return;
         initialized = true;
 
-        GL gl = drawable.getGL();
+        GL2 gl = drawable.getGL().getGL2();
         
         // Create, init and link GLSL program
         if(vertexShader != null || fragmentShader != null) {            
@@ -316,6 +316,8 @@ public class Pass implements GLEventListener {
             for (DefaultParameter parameter : glslDefaultParameters) {
                 parameter.init(glslProgram);
             }
+
+            gl.glUseProgram(0);
         }
     }
     
