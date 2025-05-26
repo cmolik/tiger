@@ -59,7 +59,7 @@ public class GlslFragmentShader extends GlslShader {
     public GlslFragmentShader(URL url) {
         try {
             filePath = url.toString();
-            System.out.println("Fragment shader: " + filePath);
+            //System.out.println("Fragment shader: " + filePath);
             StringBuffer buffer = new StringBuffer();
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
