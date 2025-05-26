@@ -45,6 +45,10 @@ public class Saq extends Pass {
         super(vertexUrl, fragmentUrl);
     }
 
+    public Saq(URL fragmentStream) {
+        super( ClassLoader.getSystemResource("tiger/util/saq/ScreenAlignedQuad.vert"), fragmentStream);
+    }
+
     public Saq(InputStream vertexStream, InputStream fragmentStream) {
         super(vertexStream, fragmentStream);
     }

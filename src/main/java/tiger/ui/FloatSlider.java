@@ -33,7 +33,7 @@ public class FloatSlider extends JSlider {
     public float min;
     public float max;
     public FloatSlider(GlslProgramFloatParameter param, boolean normalize, int orientation, float min, float max) {
-        super(orientation, 0, 100, (int)(100*param.getValue()/(max - min)));
+        super(orientation, 0, 100, (int)(100*(param.getValue() - min)/(max - min)));
         setMajorTickSpacing(defaultMajorTickSpacing);
         setMinorTickSpacing(5);
         setPaintTicks(true);

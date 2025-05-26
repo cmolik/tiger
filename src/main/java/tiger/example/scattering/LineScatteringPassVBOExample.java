@@ -103,9 +103,10 @@ public class LineScatteringPassVBOExample extends Pass {
         effect.addTarget(idBuffer);
         effect.addTarget(idSumBuffer);
         effect.addGLEventListener(writeId);
-        effect.addGLEventListener(displayId);
         effect.addGLEventListener(lineScattering);
         effect.addGLEventListener(readFromBuffer);
+        effect.addGLEventListener(displayId);
+        
 
         Window w = new Window(width, height);
         w.debug = true;

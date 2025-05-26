@@ -52,7 +52,6 @@ public class Pass implements GLEventListener {
     }
 
     /**
-     * @deprecated Use Pass(InputStream vsStream, InputStream fsStream) instead.
      * @param vsPath
      * @param fsPath
      */
@@ -63,8 +62,6 @@ public class Pass implements GLEventListener {
     }
 
     /**
-     * @deprecated Use Pass(InputStream vsStream, InputStream fsStream,
-     *      InputStream gsStream, int inputType, int outputType) instead.
      * @param vsPath
      * @param fsPath
      * @param gsPath

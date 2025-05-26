@@ -130,11 +130,14 @@ public class Sat2DJF implements GLEventListener {
         jumpLength.setValue(1);
           
         //testing fillup data for textures end
-        if(target.get().getWidth() <= 0 || target.get().getHeight() <= 0) {
+        int targetWidth = target.get().getWidth();
+        int targetHeight = target.get().getHeight();
+
+        if(targetWidth <= 0 || targetHeight <= 0) {
             gl.glViewport(0, 0, glad.getSurfaceWidth(), glad.getSurfaceHeight());
         }
         else {
-            gl.glViewport(0, 0, target.get().getWidth(), target.get().getHeight());
+            gl.glViewport(0, 0, targetWidth, targetHeight);
         }
        
         for(int i = 0; i < iterations; i++) {
@@ -146,49 +149,31 @@ public class Sat2DJF implements GLEventListener {
     }
 
     @Override
-    public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
+    public void reshape(GLAutoDrawable glad, int x, int y, int width, int height) {
         //iterations = (int) Math.ceil(Math.log(Math.max(target.get().getWidth(), target.get().getHeight())) / Math.log(2));
-        if(target.get().getWidth() <= 0 || target.get().getHeight() <= 0) {
-            iterations = (int) Math.ceil(Math.log(Math.max(i2, i3)) / Math.log(2));
+        int targetWidth = target.get().getWidth();
+        int targetHeight = target.get().getHeight();
+        if(targetWidth <= 0 || targetHeight <= 0) {
+            iterations = (int) Math.ceil(Math.log(Math.max(width, height)) / Math.log(2));
+            jumpFloodingStep.reshape(glad, x, y, width, height);
         }
         else {
-            iterations = (int) Math.ceil(Math.log(Math.max(target.get().getWidth(), target.get().getHeight())) / Math.log(2));
+            iterations = (int) Math.ceil(Math.log(Math.max(targetWidth, targetHeight)) / Math.log(2));
+            jumpFloodingStep.reshape(glad, x, y, targetWidth, targetHeight);
         }
         //System.out.println("target "+ target.get().getHeight()+ "width "+ target.get().getWidth()+"iterations" + iterations);
-        jumpFloodingStep.reshape(glad, i, i1, i2, i3);
     }
     
     public static void main(String... args) {
-//        Texture2D t1 = new Texture2D(1024, 1024);
-//        Texture2D t2 = new Texture2D(1024, 1024);
-/*LAB001-B*/         
+       
         Texture2D t1 = new Texture2D(512, 512);
         Texture2D t2 = new Texture2D(512, 512);
-        
-//        Texture2D t1 = new Texture2D(256, 256);
-//        Texture2D t2 = new Texture2D(256, 256);
-        
-//        Texture2D t1 = new Texture2D(31, 57);
-//        Texture2D t2 = new Texture2D(31, 57);
-        
-//        Texture2D t1 = new Texture2D(64, 64);
-//        Texture2D t2 = new Texture2D(64, 64);
-        
-//        Texture2D t1 = new Texture2D(32, 32);
-//        Texture2D t2 = new Texture2D(32, 32);
-        
-//        Texture2D t1 = new Texture2D(16, 16);
-//        Texture2D t2 = new Texture2D(16, 16);
-        
-//        Texture2D t1 = new Texture2D(8, 8);
-//        Texture2D t2 = new Texture2D(8, 8);
-//        Texture2D t1 = new Texture2D(2, 2);
-//        Texture2D t2 = new Texture2D(2, 2);
-/*LAB001-E*/         
+       
         SwapingLink<Texture> t = new SwapingLink<>(t1, t2);
         
         FrameBuffer f1 = new FrameBuffer(false, t1);
         FrameBuffer f2 = new FrameBuffer(false, t2);
+
         SwapingLink<FrameBuffer> f = new SwapingLink<>(f2, f1);
         
         Sat2DJF sat = new Sat2DJF(t, f);

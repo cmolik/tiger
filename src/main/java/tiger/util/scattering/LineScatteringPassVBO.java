@@ -112,8 +112,7 @@ public class LineScatteringPassVBO extends Pass {
         lines.rewind();
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo);
-        gl.glBufferData(GL.GL_ARRAY_BUFFER, lines.capacity() * Buffers.SIZEOF_FLOAT,
-                            lines, GL.GL_STATIC_DRAW);
+        gl.glBufferData(GL.GL_ARRAY_BUFFER, lines.capacity() * Buffers.SIZEOF_FLOAT, lines, GL.GL_STATIC_DRAW);
         
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
     } 
@@ -129,7 +128,11 @@ public class LineScatteringPassVBO extends Pass {
         
         //Each line is composed from 2 vertices, that is why 2*numLines
         gl.glDrawArrays(GL2.GL_LINES, 0, 2*numLines);
-        
+
+
+        gl.glDisableVertexAttribArray(0);
+        gl.glDisableVertexAttribArray(1);
+        gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
     }
 } 

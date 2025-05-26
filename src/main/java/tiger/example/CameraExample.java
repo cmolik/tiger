@@ -26,9 +26,9 @@ public class CameraExample {
         URL objUrl = ClassLoader.getSystemResource("tiger/example/cow_triangles.obj");
         ObjLoader loader = new ObjLoader();
         Scene<Mesh> scene = loader.loadFile(objUrl);
-        // for(Mesh m : scene.getAllMeshes()) {
-        //     m.renderMethod = Mesh.VERTEX_BUFFER;
-        // }
+        for(Mesh m : scene.getAllMeshes()) {
+            m.renderMethod = Mesh.VERTEX_BUFFER;
+        }
         
         RenderState rs = new RenderState();
         rs.clearBuffers(true);
