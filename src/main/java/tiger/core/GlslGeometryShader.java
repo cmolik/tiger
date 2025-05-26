@@ -26,6 +26,7 @@ import com.jogamp.opengl.GL3;
  */
 public class GlslGeometryShader extends GlslShader {
     
+    private String filePath;
     private String[] program;
     //private Map<String, Object> parameters = new HashMap<String ,Object>();
     private int inputType;
@@ -64,8 +65,10 @@ public class GlslGeometryShader extends GlslShader {
     
     public GlslGeometryShader(URL url, int inputType, int outputType) {
         try {
+            filePath = url.toString();
+            System.out.println("Geometry shader: " + filePath);
             StringBuffer buffer = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new FileReader(url.getPath().replaceAll("%20", " ")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 buffer.append(line).append("\n");
             }

@@ -58,8 +58,10 @@ public class GlslVertexShader extends GlslShader {
     
     public GlslVertexShader(URL url) {
         try {
+            filePath = url.toString();
+            System.out.println("Vertex shader: " + filePath);
             StringBuffer buffer = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new FileReader(url.getPath().replaceAll("%20", " ")));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 buffer.append(line).append("\n");
             }
