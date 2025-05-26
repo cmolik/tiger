@@ -7,6 +7,7 @@ package tiger.util.sat;
 
 import com.jogamp.opengl.util.GLBuffers;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import com.jogamp.opengl.GL;
@@ -55,7 +56,7 @@ public class Sat2DJF implements GLEventListener {
         rs.disable(GL.GL_DEPTH_TEST);
         rs.disable(GL.GL_BLEND);
         
-        InputStream fs = ClassLoader.getSystemResourceAsStream("tiger/util/sat/jumpFloodingStep_jf.frag");
+        URL fs = ClassLoader.getSystemResource("tiger/util/sat/jumpFloodingStep_jf.frag");
         jumpFloodingStep = new Saq(fs, source);
         jumpFloodingStep.setTarget(target);
         jumpFloodingStep.glslVaryingParameters.add(jumpLength);

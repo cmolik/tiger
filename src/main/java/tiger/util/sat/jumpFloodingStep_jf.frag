@@ -12,14 +12,14 @@ void main(void) {
    vec2 texOffset = jumpLength / vec2(texSize);
    vec2 offsetCoord = texCoord - texOffset;
 
-   gl_FragColor  = texture(texture, texCoord);
+   gl_FragColor  = texture2D(texture, texCoord);
    if(offsetCoord.x > 0) {
-        gl_FragColor += texture(texture, vec2(offsetCoord.x, texCoord.y));
+        gl_FragColor += texture2D(texture, vec2(offsetCoord.x, texCoord.y));
    }
    if(offsetCoord.y > 0) {
-        gl_FragColor += texture(texture, vec2(texCoord.x, offsetCoord.y));
+        gl_FragColor += texture2D(texture, vec2(texCoord.x, offsetCoord.y));
    }
    if(offsetCoord.x > 0 && offsetCoord.y > 0) {
-        gl_FragColor += texture(texture, offsetCoord);
+        gl_FragColor += texture2D(texture, offsetCoord);
    }
 }
