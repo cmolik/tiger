@@ -112,28 +112,15 @@ public class NonresizingScatteringPass extends Pass {
         int numX = 1+(int)Math.ceil((1-(offsetX/2))*(1/offsetX)-1);
         int numY = 1+(int)Math.ceil((1-(offsetY/2))*(1/offsetY)-1);
         int numPoints = numX*numY;
-        float[] vertexArray = new float[3*numPoints];
-        // float[] colorArray = new float[3*numPoints];
-        int index = 0;
+        vertices = Buffers.newDirectFloatBuffer(3*numPoints);
         for(float x = ox; x < 1f; x += offsetX) {
             for(float y = oy; y < 1f; y += offsetY) {
-                // colorArray[3*index]=0.0f;
-                // colorArray[3*index+1]=0.0f;
-                // colorArray[3*index+2]=0.0f;
-                vertexArray[3*index]=x;
-                vertexArray[3*index+1]=y;
-                vertexArray[3*index+2]=0.0f;
-                index++;
+                vertices.put(x);
+                vertices.put(y);
+                vertices.put(0.0f);
             }
         }
-        
-        vertices = Buffers.newDirectFloatBuffer(vertexArray.length);
-        vertices.put(vertexArray);
         vertices.rewind();
-        
-        // colors = Buffers.newDirectFloatBuffer(colorArray.length);
-        // colors.put(colorArray);
-        // colors.rewind();
         
         int[] temp = new int[2];
         gl.glGenBuffers(2, temp, 0);
@@ -144,10 +131,5 @@ public class NonresizingScatteringPass extends Pass {
                             vertices, GL.GL_STATIC_DRAW);
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         
-        // VBOColors = temp[1];
-        // gl.glBindBuffer(GL.GL_ARRAY_BUFFER, VBOColors);
-        // gl.glBufferData(GL.GL_ARRAY_BUFFER, colors.capacity() * Buffers.SIZEOF_FLOAT,
-        //                     colors, GL.GL_STATIC_DRAW);
-        // gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
     }
 } 
