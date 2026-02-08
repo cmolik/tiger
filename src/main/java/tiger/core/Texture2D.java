@@ -70,10 +70,27 @@ public class Texture2D extends Texture {
             GL.GL_BGRA,
             GL2.GL_BGR,
             GL2.GL_BGR,
-            GL.GL_LUMINANCE,
-            GL.GL_LUMINANCE,
-            GL.GL_LUMINANCE,
-            GL.GL_LUMINANCE
+            GL2.GL_RED,
+            GL2.GL_RED,
+            GL2.GL_RED,
+            GL2.GL_RED
+        };
+
+        public static int[] internalFormats = new int[] {
+            GL.GL_RGBA,
+            GL.GL_RGB,
+            GL.GL_RGBA,
+            GL.GL_RGBA,
+            GL.GL_RGB,
+            GL.GL_RGB,
+            GL.GL_RGBA,
+            GL.GL_RGBA,
+            GL.GL_RGB,
+            GL.GL_RGB,
+            GL2.GL_RED,
+            GL2.GL_RED,
+            GL2.GL_RED,
+            GL2.GL_RED
         };
 
 	public Texture2D() {
@@ -109,81 +126,86 @@ public class Texture2D extends Texture {
 		this.type = type;
 	}
 
-        public static void bindNothing(GL gl) {
-            gl.glBindTexture(GL3.GL_TEXTURE_2D, 0);
+    public static void bindNothing(GL gl) {
+        gl.glBindTexture(GL3.GL_TEXTURE_2D, 0);
+    }
+
+    public void loadData(BufferedImage image) {
+
+        width = image.getWidth();
+        height = image.getHeight();
+
+        int imageType = image.getType();
+        System.out.println("Image type: " + imageTypes[imageType]);
+        DataBuffer dataBuffer = image.getRaster().getDataBuffer();
+
+        resizable = false;
+        type = pixelTypes[imageType];
+        format = pixelFormats[imageType];
+        internalFormat = internalFormats[imageType];
+
+        params.put(GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        params.put(GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+
+        switch(imageType) {
+            case BufferedImage.TYPE_CUSTOM:
+                switch(image.getSampleModel().getNumBands()) {
+                    case 1:
+                        format = GL.GL_LUMINANCE;
+                        internalFormat = GL.GL_R8;
+                        break;
+                    case 3:
+                        format = GL.GL_RGB;
+                        internalFormat = GL.GL_RGB8;
+                        break;
+                    case 4:
+                        format = GL.GL_RGBA;
+                        internalFormat = GL.GL_RGBA8;
+                        break;
+                }
+            case BufferedImage.TYPE_3BYTE_BGR:
+            case BufferedImage.TYPE_4BYTE_ABGR:
+            case BufferedImage.TYPE_4BYTE_ABGR_PRE:
+            case BufferedImage.TYPE_BYTE_BINARY:
+            case BufferedImage.TYPE_BYTE_GRAY:
+            case BufferedImage.TYPE_BYTE_INDEXED:
+                imageData = ByteBuffer.wrap(((DataBufferByte) dataBuffer).getData());
+                break;
+            case BufferedImage.TYPE_INT_ARGB:
+            case BufferedImage.TYPE_INT_ARGB_PRE:
+            case BufferedImage.TYPE_INT_BGR:
+            case BufferedImage.TYPE_INT_RGB:
+                imageData = IntBuffer.wrap(((DataBufferInt) dataBuffer).getData());
+                break;
+            case BufferedImage.TYPE_USHORT_GRAY:
+            case BufferedImage.TYPE_USHORT_555_RGB:
+            case BufferedImage.TYPE_USHORT_565_RGB:
+                internalFormat = GL2.GL_LUMINANCE16;
+                imageData = ShortBuffer.wrap(((DataBufferUShort) dataBuffer).getData());
+                break;
+            default:
+                System.out.println("Unknown image type");
         }
-
-        public void loadData(BufferedImage image) {
-
-            width = image.getWidth();
-            height = image.getHeight();
-
-            int imageType = image.getType();
-            System.out.println("Image type: " + imageTypes[imageType]);
-            DataBuffer dataBuffer = image.getRaster().getDataBuffer();
-
-            resizable = false;
-            type = pixelTypes[imageType];
-            format = pixelFormats[imageType];
-            params.put(GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-            params.put(GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-
-            switch(imageType) {
-                case BufferedImage.TYPE_CUSTOM:
-                    switch(image.getSampleModel().getNumBands()) {
-                        case 1:
-                            format = GL.GL_LUMINANCE;
-                            break;
-                        case 3:
-                            format = GL.GL_RGB;
-                            break;
-                        case 4:
-                            format = GL.GL_RGBA;
-                            break;
-                    }
-                case BufferedImage.TYPE_3BYTE_BGR:
-                case BufferedImage.TYPE_4BYTE_ABGR:
-                case BufferedImage.TYPE_4BYTE_ABGR_PRE:
-                case BufferedImage.TYPE_BYTE_BINARY:
-                case BufferedImage.TYPE_BYTE_GRAY:
-                case BufferedImage.TYPE_BYTE_INDEXED:
-                    imageData = ByteBuffer.wrap(((DataBufferByte) dataBuffer).getData());
-                    break;
-                case BufferedImage.TYPE_INT_ARGB:
-                case BufferedImage.TYPE_INT_ARGB_PRE:
-                case BufferedImage.TYPE_INT_BGR:
-                case BufferedImage.TYPE_INT_RGB:
-                    imageData = IntBuffer.wrap(((DataBufferInt) dataBuffer).getData());
-                    break;
-                case BufferedImage.TYPE_USHORT_GRAY:
-                case BufferedImage.TYPE_USHORT_555_RGB:
-                case BufferedImage.TYPE_USHORT_565_RGB:
-                    internalFormat = GL2.GL_LUMINANCE16;
-                    imageData = ShortBuffer.wrap(((DataBufferUShort) dataBuffer).getData());
-                    break;
-                default:
-                    System.out.println("Unknown image type");
+        
+        if(imageType == BufferedImage.TYPE_4BYTE_ABGR) {
+            ByteBuffer buffer = (ByteBuffer) imageData;
+            byte[] array;
+            if(buffer.hasArray()) {
+                array = buffer.array();
+                for(int i = 0; i < array.length; i += 4) {
+                    byte a = array[i];
+                    byte b = array[i+1];
+                    byte g = array[i+2];
+                    byte r = array[i+3];
+                    array[i] = b;
+                    array[i+1] = g;
+                    array[i+2] = r;
+                    array[i+3] = a;
+                }
             }
             
-            if(imageType == BufferedImage.TYPE_4BYTE_ABGR) {
-                ByteBuffer buffer = (ByteBuffer) imageData;
-                byte[] array;
-                if(buffer.hasArray()) {
-                    array = buffer.array();
-                    for(int i = 0; i < array.length; i += 4) {
-                        byte a = array[i];
-                        byte b = array[i+1];
-                        byte g = array[i+2];
-                        byte r = array[i+3];
-                        array[i] = b;
-                        array[i+1] = g;
-                        array[i+2] = r;
-                        array[i+3] = a;
-                    }
-                }
-                
-            }
         }
+    }
 
 	/*public void init(GL gl) {
                 if(!initialized) {
@@ -228,17 +250,17 @@ public class Texture2D extends Texture {
 	public void loadImage(GL gl, int mipLevel, int internalFormat, int format, int type, int border, int width, int height, int depth, Buffer data) {
 		bind(gl);
                 
-                // The following line is here as workaround of Frame Buffer Object
-		// errors on ATI graphic cards
-                //gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_GENERATE_MIPMAP, GL.GL_TRUE);
-		
-                gl.glTexImage2D(GL.GL_TEXTURE_2D, mipLevel, internalFormat, width, height, border, format, type, data);
-                //GL3 gl3 = gl.getGL3();
-                //gl3.glTexImage2DMultisample(GL3.GL_TEXTURE_2D_MULTISAMPLE, 4, internalFormat, width, height, false);
+        // The following line is here as workaround of Frame Buffer Object
+        // errors on ATI graphic cards
+        //gl.glTexParameteri(GL.GL_TEXTURE_2D, GL2.GL_GENERATE_MIPMAP, GL.GL_TRUE);
+
+        gl.glTexImage2D(GL.GL_TEXTURE_2D, mipLevel, internalFormat, width, height, border, format, type, data);
+        //GL3 gl3 = gl.getGL3();
+        //gl3.glTexImage2DMultisample(GL3.GL_TEXTURE_2D_MULTISAMPLE, 4, internalFormat, width, height, false);
 	}
         
-        public void loadSubImage(GL gl, int mipLevel, int format, int type, int border, int xOffset, int yOffset, int zOffset, int width, int height, int depth, Buffer data) {
-            bind(gl);
-            gl.glTexSubImage2D(GL.GL_TEXTURE_2D, mipLevel, xOffset, yOffset, width, height, format, type, data);
-        }
+    public void loadSubImage(GL gl, int mipLevel, int format, int type, int border, int xOffset, int yOffset, int zOffset, int width, int height, int depth, Buffer data) {
+        bind(gl);
+        gl.glTexSubImage2D(GL.GL_TEXTURE_2D, mipLevel, xOffset, yOffset, width, height, format, type, data);
+    }
 }

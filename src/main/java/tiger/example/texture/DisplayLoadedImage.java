@@ -25,7 +25,9 @@ public class DisplayLoadedImage {
         rs.disable(GL.GL_DEPTH_TEST);
 
         Texture2D texture = new Texture2D();
-        BufferedImage image = ImageIO.read(new File("C:/Users/cmolikl/Projects/PanoramaLabeling/data/vid02/annotations_background0000.png"));
+        BufferedImage image = ImageIO.read(new File("C:\\Users\\cmoli\\Projects\\gapminder\\data\\rylov-islands-color-buffer.png"));
+        //BufferedImage image = ImageIO.read(new File("C:\\Users\\cmoli\\Projects\\gapminder\\data\\idbuffer.png"));
+        // BufferedImage image = ImageIO.read(new File("C:/Users/cmolikl/Projects/PanoramaLabeling/data/vid02/annotations_background0000.png"));
         texture.loadData(image);
 
         InputStream fragmentStream = ClassLoader.getSystemResourceAsStream("tiger/util/saq/YReversedScreenAlignedQuad.frag");
@@ -33,8 +35,8 @@ public class DisplayLoadedImage {
         pass.renderState = rs;
 
         Effect e = new Effect();
-        e.addGLEventListener(pass);
         e.addTexture(texture);
+        e.addGLEventListener(pass);
 
         Window w = new Window(texture.getWidth(), texture.getHeight());
         //w.debug = true;
