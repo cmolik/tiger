@@ -134,11 +134,16 @@ public class Window {
 //        this.debug = debug;
 //    }
 
+    private int windowWidth = 512;
+    private int windowHeight = 512;
+
     public Window(int width, int height, GLProfile profile) {
         GLCapabilities capabilities = new GLCapabilities(profile);
         capabilities.setSampleBuffers(true);
         capabilities.setNumSamples(4);
         capabilities.setDoubleBuffered(true);
+        this.windowWidth = width;
+        this.windowHeight = height;
         canvas = new GLCanvas(capabilities);
         canvas.setSize(width, height);
         canvas.setPreferredSize(new Dimension(width, height));
@@ -361,10 +366,16 @@ public class Window {
         BooleanMenuItem screenShotMenuItem = new BooleanMenuItem("Make screenshot", captureScreenShot);
         recordingMenu.add(screenShotMenuItem);
         }
+
+        Dimension d = new Dimension(windowWidth, windowHeight);
+        //canvas.setMinimumSize(d);
+        //canvas.setMaximumSize(d);
+        canvas.setPreferredSize(d);
         
         LayoutManager layout = new BoxLayout(params, BoxLayout.Y_AXIS);
         params.setLayout(layout);
         scrolling = new JScrollPane(params, verticalScrollBar, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrolling.setPreferredSize(new Dimension(250, windowHeight));
 
         frame = new JFrame("");
         frame.setIconImage(new BufferedImage(16, 16, BufferedImage.TYPE_4BYTE_ABGR));
