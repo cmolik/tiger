@@ -19,7 +19,7 @@
         <repository>
             <id>repsy</id>
             <name>My Public Maven Repository on Repsy</name>
-            <url>https://repo.repsy.io/mvn/cmolik/public</url>
+            <url>https://repo.repsy.io/cmolik/public</url>
         </repository>
     </repositories>
 
@@ -27,7 +27,7 @@
         <repository>
             <id>repsy</id>
             <name>My Public Maven Repository on Repsy</name>
-            <url>https://repo.repsy.io/mvn/cmolik/public</url>
+            <url>https://repo.repsy.io/cmolik/public</url>
         </repository>
     </distributionManagement>
 
